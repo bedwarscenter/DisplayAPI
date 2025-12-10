@@ -1,0 +1,71 @@
+plugins {
+    id "java"
+    id "java-library"
+    id("com.gradleup.shadow") version "${shadowJarVersion}"
+}
+
+group = project.findProperty("group")
+version = project.findProperty("version")
+description = project.findProperty("description")
+
+dependencies {
+    compileOnly("xyz.refinedev.spigot:Carbon-API:1.8.8-R0.1-SNAPSHOT") {
+        exclude group: 'me.carleslc.Simple-YAML', module: 'Simple-Yaml'
+        exclude group: 'me.lucko', module: 'spark-api'
+    }
+    compileOnly("org.paperspigot:PaperSpigot:1.8.8") {
+        exclude group: 'me.carleslc.Simple-YAML', module: 'Simple-Yaml'
+        exclude group: 'me.lucko', module: 'spark-api'
+    }
+
+    compileOnly "org.projectlombok:lombok:${project.findProperty("lombokVersion")}"
+    annotationProcessor "org.projectlombok:lombok:${project.findProperty("lombokVersion")}"
+}
+
+def targetJavaVersion = project.findProperty("targetJavaVersion")?.toInteger() ?: 21
+
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+
+    if (JavaVersion.current() < javaVersion) {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = project.findProperty("sourceEncoding") ?: "UTF-8"
+    options.compilerArgs << "-parameters"
+    options.fork = true
+
+    if (JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+shadowJar {
+    archiveBaseName.set(project.findProperty("projectName"))
+    archiveClassifier.set("")
+    archiveVersion.set(version.toString())
+
+    manifest {
+        attributes(
+                "Implementation-Title": project.findProperty("projectName"),
+                "Implementation-Version": version,
+                "Built-By": System.getProperty("user.name"),
+                "Built-JDK": System.getProperty("java.version"),
+                "Created-By": "Gradle ${gradle.gradleVersion}"
+        )
+    }
+}
+
+build {
+    dependsOn shadowJar
+}
+
+clean {
+    delete project.findProperty("buildDir") ?: "build"
+}

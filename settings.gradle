@@ -1,0 +1,50 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+
+        maven {
+            name = "spigotmc"
+            url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        }
+
+        maven {
+            name = "refinePublicRepo"
+            url = "https://maven.refinedev.xyz/public-repo"
+        }
+    }
+}
+
+def props = new Properties()
+def propsFile = file("gradle.properties")
+
+if (propsFile.exists()) {
+    propsFile.withInputStream {
+        props.load(it)
+    }
+}
+
+rootProject.name = props.getProperty("projectName")
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+
+        maven {
+            name = "spigotmc"
+            url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        }
+
+        maven {
+            name = "refinePublicRepo"
+            url = "https://maven.refinedev.xyz/public-repo"
+        }
+    }
+}
+
+buildCache {
+    local {
+        enabled = true
+        directory = new File(rootDir, ".gradle/build-cache")
+    }
+}
