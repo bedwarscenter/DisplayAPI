@@ -2,7 +2,6 @@ package center.bedwars.api.nms;
 
 import center.bedwars.api.nms.netty.NettyManager;
 import center.bedwars.api.nms.netty.PacketDirection;
-import center.bedwars.api.nms.netty.PacketInterceptor;
 import io.netty.channel.Channel;
 import lombok.experimental.UtilityClass;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
@@ -11,7 +10,6 @@ import net.minecraft.server.v1_8_R3.Packet;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 

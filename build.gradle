@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "java-library"
-    id("com.gradleup.shadow") version "${shadowJarVersion}"
+    id("com.gradleup.shadow")
 }
 
 group = project.findProperty("group")

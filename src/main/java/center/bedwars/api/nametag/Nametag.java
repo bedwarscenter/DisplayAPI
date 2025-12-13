@@ -12,6 +12,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
 
+@SuppressWarnings("unused")
 public class Nametag implements INametag {
 
     private final WeakReference<Player> playerRef;
